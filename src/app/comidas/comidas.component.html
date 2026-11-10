@@ -8,11 +8,21 @@
   <div class="buscadores">
     <div class="buscador">
       <label>Buscar por Comida</label>
-      <input type="text" [(ngModel)]="busquedaComida" placeholder="Ej: Adobo, Pancit, Lumpia...">
+      <input 
+        type="text" 
+        [(ngModel)]="busquedaComida" 
+        (input)="filtrar()" 
+        placeholder="Ej: Adobo, Pancit, Lumpia..."
+      >
     </div>
     <div class="buscador">
       <label>Buscar por Ingredientes</label>
-      <input type="text" [(ngModel)]="busquedaIngrediente" placeholder="Ej: pollo, soya, fideos...">
+      <input 
+        type="text" 
+        [(ngModel)]="busquedaIngrediente" 
+        (input)="filtrar()" 
+        placeholder="Ej: pollo, soya, fideos..."
+      >
     </div>
   </div>
 

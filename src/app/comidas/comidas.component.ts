@@ -1,21 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { ComidaService, Comida } from '../services/comida.service';
-import { CarritoService, ItemCarrito } from '../services/carrito.service';
+import { ComidaService } from '../services/comida.service';
+import { CarritoService } from '../services/carrito.service';
+import { Producto } from '../entidades/producto';
 
 @Component({
   selector: 'app-comidas',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './comidas.component.html',
   styleUrls: ['./comidas.component.css']
 })
 export class ComidasComponent implements OnInit {
+  listaComidas: Producto[] = [];
+  comidasFiltradas: Producto[] = [];
+  
   busquedaComida: string = '';
   busquedaIngrediente: string = '';
-  comidas: Comida[] = [];
   cargando: boolean = true;
 
   constructor(
@@ -24,52 +26,67 @@ export class ComidasComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cargarComidasAPI();
+    this.cargarComidas();
   }
 
-  cargarComidasAPI(): void {
+  cargarComidas(): void {
     this.cargando = true;
     this.comidaService.recibirDatos().subscribe({
       next: (data) => {
         if (data && data.meals) {
-          this.comidas = data.meals.map((meal: any) => ({
-            nombre: meal.strMeal,
-            precio: '$25.000',
-            img: meal.strMealThumb,
-            desc: `Plato típico de origen ${meal.strArea || 'Internacional'}.`,
-            ingredientes: [meal.strIngredient1, meal.strIngredient2, meal.strIngredient3]
-              .filter(i => i && i.trim() !== '')
-              .join(', ')
-          }));
-        } else {
-          this.comidas = [];
+          this.listaComidas = data.meals.map((meal: any) => {
+            const prod = new Producto();
+            prod.id = meal.idMeal;
+            prod.nombre = meal.strMeal;
+            prod.precio = '$35.000';
+            prod.img = meal.strMealThumb;
+            prod.tipo = 'comida';
+            prod.desc = meal.strInstructions 
+              ? meal.strInstructions.substring(0, 120) + '...' 
+              : 'Plato especial filipino con sabores únicos.';
+            
+            // Extrae los ingredientes de la API en minúsculas y limpios
+            const ingList: string[] = [];
+            for (let i = 1; i <= 20; i++) {
+              const ingrediente = meal[`strIngredient${i}`];
+              if (ingrediente && ingrediente.trim() !== '') {
+                ingList.push(ingrediente.trim());
+              }
+            }
+            prod.ingredientes = ingList.join(', ');
+            return prod;
+          });
+          this.comidasFiltradas = [...this.listaComidas];
         }
         this.cargando = false;
       },
-      error: (err) => {
-        console.error('Error al conectar con TheMealDB:', err);
-        this.cargando = false;
-      }
+      error: () => this.cargando = false
     });
   }
 
-  get comidasFiltradas(): Comida[] {
-    if (!this.comidas) return [];
-    return this.comidas.filter(comida => {
-      const coincideNombre = comida.nombre.toLowerCase().includes(this.busquedaComida.toLowerCase());
-      const coincideIngrediente = comida.ingredientes.toLowerCase().includes(this.busquedaIngrediente.toLowerCase());
-      return coincideNombre && coincideIngrediente;
+  onBusquedaComidaChange(valor: string): void {
+    this.busquedaComida = valor;
+    this.filtrar();
+  }
+
+  onBusquedaIngredienteChange(valor: string): void {
+    this.busquedaIngrediente = valor;
+    this.filtrar();
+  }
+
+  filtrar(): void {
+    const termNombre = this.busquedaComida.toLowerCase().trim();
+    const termIngrediente = this.busquedaIngrediente.toLowerCase().trim();
+
+    this.comidasFiltradas = this.listaComidas.filter(c => {
+      const nombreMatch = !termNombre || c.nombre.toLowerCase().includes(termNombre);
+      const ingredienteMatch = !termIngrediente || c.ingredientes.toLowerCase().includes(termIngrediente);
+      return nombreMatch && ingredienteMatch;
     });
   }
 
-  agregarAlPedido(comida: Comida): void {
-    const item: ItemCarrito = {
-      nombre: comida.nombre,
-      precio: comida.precio,
-      img: comida.img,
-      tipo: 'comida'
-    };
-    this.carritoService.agregarItem(item);
-    alert(`¡${comida.nombre} fue agregado a tu carrito!`);
+  agregarAlPedido(comida: Producto): void {
+    this.carritoService.agregarItem(comida);
+    alert(`¡${comida.nombre} agregada al pedido!`);
   }
 }

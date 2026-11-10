@@ -2,27 +2,23 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
-export interface ItemCarrito {
-  nombre: string;
-  precio: string; // Ej: "$25.000"
-  img: string;
-  tipo: 'comida' | 'bebida';
-}
+import { Producto } from '../entidades/producto';
+import { Cliente } from '../entidades/cliente';
+import { Pedido } from '../entidades/pedido';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarritoService {
-  private itemsSubject = new BehaviorSubject<ItemCarrito[]>([]);
+  private itemsSubject = new BehaviorSubject<Producto[]>([]);
   items$ = this.itemsSubject.asObservable();
 
-  agregarItem(item: ItemCarrito): void {
+  agregarItem(producto: Producto): void {
     const actuales = this.itemsSubject.value;
-    this.itemsSubject.next([...actuales, item]);
+    this.itemsSubject.next([...actuales, producto]);
   }
 
-  obtenerCarrito(): ItemCarrito[] {
+  obtenerCarrito(): Producto[] {
     return this.itemsSubject.value;
   }
 
@@ -43,15 +39,15 @@ export class CarritoService {
     }, 0);
   }
 
-  generarFacturaPDF(nombreCliente: string = 'Cliente MANILA'): void {
-    const items = this.obtenerCarrito();
-    if (items.length === 0) return;
+  generarFacturaPDF(cliente: Cliente): void {
+    const productos = this.obtenerCarrito();
+    if (productos.length === 0) return;
 
     const doc = new jsPDF();
     const fecha = new Date().toLocaleDateString('es-CO');
     const hora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
 
-    // Encabezado
+    // Encabezado MANILA
     doc.setFillColor(26, 26, 26);
     doc.rect(0, 0, 210, 40, 'F');
 
@@ -68,16 +64,16 @@ export class CarritoService {
     // Datos del cliente
     doc.setTextColor(50, 50, 50);
     doc.setFontSize(11);
-    doc.text(`Cliente: ${nombreCliente}`, 14, 50);
+    doc.text(`Cliente: ${cliente.nombre || 'Cliente MANILA'}`, 14, 50);
     doc.text(`Fecha: ${fecha} - ${hora}`, 14, 56);
     doc.text(`N° Pedido: #MNL-${Math.floor(100000 + Math.random() * 900000)}`, 14, 62);
 
     // Tabla
-    const filasTabla = items.map(item => [
-      item.nombre,
-      item.tipo.toUpperCase(),
+    const filasTabla = productos.map(p => [
+      p.nombre,
+      p.tipo.toUpperCase(),
       '1',
-      item.precio
+      p.precio
     ]);
 
     autoTable(doc, {

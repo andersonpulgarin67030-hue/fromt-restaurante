@@ -1,0 +1,118 @@
+.footer {
+  background-color: #161616;
+  border-top: 2px solid #FFCC00;
+  padding-top: 40px;
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px 40px 32px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr 1fr;
+  gap: 40px;
+}
+
+.footer-brand .footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.logo-badge {
+  width: 32px;
+  height: 32px;
+  background-color: #FFCC00;
+  color: #111111;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #ffffff;
+}
+
+.brand-desc {
+  color: #888888;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.footer-section h4 {
+  color: #FFCC00;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a,
+.social-links a {
+  color: #aaaaaa;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.footer-section ul li a:hover,
+.social-links a:hover {
+  color: #ffffff;
+}
+
+.footer-section p {
+  color: #aaaaaa;
+  font-size: 13px;
+  margin: 0 0 8px 0;
+}
+
+.reserva-note {
+  color: #FFCC00;
+  font-style: italic;
+}
+
+.social-links {
+  display: flex;
+  gap: 8px;
+}
+
+.social-links .dot {
+  color: #444444;
+}
+
+.footer-bottom {
+  background-color: #0a0a0a;
+  text-align: center;
+  padding: 16px;
+  border-top: 1px solid #222222;
+}
+
+.footer-bottom p {
+  color: #555555;
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}

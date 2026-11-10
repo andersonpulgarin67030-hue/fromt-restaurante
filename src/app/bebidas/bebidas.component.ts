@@ -1,26 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { BebidaService, Bebida } from '../services/bebida.service';
-import { CarritoService, ItemCarrito } from '../services/carrito.service';
+import { BebidaService } from '../services/bebida.service';
+import { CarritoService } from '../services/carrito.service';
+import { Producto } from '../entidades/producto';
 
 @Component({
   selector: 'app-bebidas',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './bebidas.component.html',
   styleUrls: ['./bebidas.component.css']
 })
 export class BebidasComponent implements OnInit {
+  listaBebidas: Producto[] = [];
+  bebidasFiltradas: Producto[] = [];
+  
   busquedaBebida: string = '';
   busquedaIngrediente: string = '';
-  
-  // Nuevos filtros
-  filtroAlcohol: string = 'todos'; // 'todos', 'alcohol', 'sin-alcohol'
-  filtroCategoria: string = 'todas'; // 'todas', 'ordinary', 'cocktail'
-
-  bebidas: Bebida[] = [];
+  filtroAlcohol: string = 'todos';
+  filtroCategoria: string = 'todas';
   cargando: boolean = true;
 
   constructor(
@@ -29,75 +28,67 @@ export class BebidasComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cargarBebidasAPI();
+    this.cargarBebidas();
   }
 
-  cargarBebidasAPI(): void {
+  cargarBebidas(): void {
     this.cargando = true;
     this.bebidaService.obtenerBebidasAPI().subscribe({
       next: (data) => {
         if (data && data.drinks) {
-          this.bebidas = data.drinks.map((drink: any) => ({
-            nombre: drink.strDrink,
-            precio: '$15.000',
-            img: drink.strDrinkThumb,
-            desc: drink.strInstructions || 'Refrescante bebida de la casa.',
-            ingredientes: [drink.strIngredient1, drink.strIngredient2, drink.strIngredient3]
-              .filter(i => i && i.trim() !== '')
-              .join(', '),
-            alcoholica: drink.strAlcoholic === 'Alcoholic',
-            categoria: drink.strCategory || 'Cocktail'
-          }));
-        } else {
-          this.bebidas = [];
+          this.listaBebidas = data.drinks.map((drink: any) => {
+            const prod = new Producto();
+            prod.id = drink.idDrink;
+            prod.nombre = drink.strDrink;
+            prod.precio = '$22.000';
+            prod.img = drink.strDrinkThumb;
+            prod.tipo = 'bebida';
+            prod.desc = drink.strInstructions || 'Deliciosa bebida artesanal preparada con los mejores ingredientes.';
+            
+            // Extraer hasta 15 ingredientes de TheCocktailDB
+            const ingList: string[] = [];
+            for (let i = 1; i <= 15; i++) {
+              const ingrediente = drink[`strIngredient${i}`];
+              if (ingrediente && ingrediente.trim() !== '') {
+                ingList.push(ingrediente.trim());
+              }
+            }
+            prod.ingredientes = ingList.join(', ') || 'Hielo, Frutas, Menta';
+            
+            prod.alcoholica = drink.strAlcoholic === 'Alcoholic';
+            prod.categoria = drink.strCategory ? drink.strCategory.toLowerCase() : '';
+            return prod;
+          });
+          this.bebidasFiltradas = [...this.listaBebidas];
         }
         this.cargando = false;
       },
-      error: (err) => {
-        console.error('Error al conectar con TheCocktailDB:', err);
-        this.cargando = false;
-      }
+      error: () => this.cargando = false
     });
   }
 
-  get bebidasFiltradas(): Bebida[] {
-    if (!this.bebidas) return [];
+  filtrar(): void {
+    const termNombre = this.busquedaBebida.toLowerCase().trim();
+    const termIngrediente = this.busquedaIngrediente.toLowerCase().trim();
 
-    return this.bebidas.filter(bebida => {
-      // 1. Buscador por nombre
-      const matchNombre = bebida.nombre.toLowerCase().includes(this.busquedaBebida.toLowerCase());
+    this.bebidasFiltradas = this.listaBebidas.filter(b => {
+      const coincideNombre = !termNombre || b.nombre.toLowerCase().includes(termNombre);
+      const coincideIngrediente = !termIngrediente || b.ingredientes.toLowerCase().includes(termIngrediente);
+      
+      const coincideAlcohol = this.filtroAlcohol === 'todos' || 
+        (this.filtroAlcohol === 'alcohol' && b.alcoholica) || 
+        (this.filtroAlcohol === 'sin-alcohol' && !b.alcoholica);
 
-      // 2. Buscador por ingrediente
-      const matchIngrediente = bebida.ingredientes.toLowerCase().includes(this.busquedaIngrediente.toLowerCase());
+      const coincideCat = this.filtroCategoria === 'todas' || 
+        (this.filtroCategoria === 'ordinary' && b.categoria.includes('ordinary')) || 
+        (this.filtroCategoria === 'cocktail' && b.categoria.includes('cocktail'));
 
-      // 3. Filtro por alcohol
-      let matchAlcohol = true;
-      if (this.filtroAlcohol === 'alcohol') {
-        matchAlcohol = bebida.alcoholica === true;
-      } else if (this.filtroAlcohol === 'sin-alcohol') {
-        matchAlcohol = bebida.alcoholica === false;
-      }
-
-      // 4. Filtro por categoría (Mapeado a los valores en inglés de la API)
-      let matchCat = true;
-      if (this.filtroCategoria === 'ordinary') {
-        matchCat = bebida.categoria.toLowerCase().includes('ordinary');
-      } else if (this.filtroCategoria === 'cocktail') {
-        matchCat = bebida.categoria.toLowerCase().includes('cocktail');
-      }
-
-      return matchNombre && matchIngrediente && matchAlcohol && matchCat;
+      return coincideNombre && coincideIngrediente && coincideAlcohol && coincideCat;
     });
   }
 
-  agregarAlPedido(bebida: Bebida): void {
-    const item: ItemCarrito = {
-      nombre: bebida.nombre,
-      precio: bebida.precio,
-      img: bebida.img,
-      tipo: 'bebida'
-    };
-    this.carritoService.agregarItem(item);
-    alert(`¡${bebida.nombre} fue agregada a tu carrito!`);
+  agregarAlPedido(bebida: Producto): void {
+    this.carritoService.agregarItem(bebida);
+    alert(`¡${bebida.nombre} agregada al pedido!`);
   }
 }

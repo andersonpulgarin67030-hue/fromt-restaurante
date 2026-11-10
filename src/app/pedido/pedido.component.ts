@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CarritoService, ItemCarrito } from '../services/carrito.service';
+import { CarritoService } from '../services/carrito.service';
+import { Producto } from '../entidades/producto';
+import { Cliente } from '../entidades/cliente';
+import { Pedido } from '../entidades/pedido';
 
 @Component({
   selector: 'app-pedido',
@@ -11,10 +14,8 @@ import { CarritoService, ItemCarrito } from '../services/carrito.service';
   styleUrls: ['./pedido.component.css']
 })
 export class PedidoComponent implements OnInit {
-  items: ItemCarrito[] = [];
-  nombreCliente: string = '';
-  direccion: string = '';
-  telefono: string = '';
+  items: Producto[] = [];
+  cliente: Cliente = new Cliente();
   metodoPago: string = 'efectivo';
 
   constructor(private carritoService: CarritoService) {}
@@ -40,18 +41,23 @@ export class PedidoComponent implements OnInit {
       return;
     }
 
-    if (!this.nombreCliente.trim()) {
+    if (!this.cliente.nombre.trim()) {
       alert('Por favor ingresa tu nombre para procesar la orden.');
       return;
     }
 
-    // Genera el PDF con la factura
-    this.carritoService.generarFacturaPDF(this.nombreCliente);
+    // Instanciamos el pedido formal
+    const nuevoPedido = new Pedido();
+    nuevoPedido.cliente = this.cliente;
+    nuevoPedido.productos = this.items;
+    nuevoPedido.total = this.carritoService.obtenerTotal();
+    nuevoPedido.metodoPago = this.metodoPago;
 
-    alert(`¡Gracias por tu compra, ${this.nombreCliente}! Tu comprobante en PDF se ha descargado.`);
+    // Genera el PDF con la factura
+    this.carritoService.generarFacturaPDF(this.cliente);
+
+    alert(`¡Gracias por tu compra, ${this.cliente.nombre}! Tu comprobante en PDF se ha descargado.`);
     this.carritoService.limpiarCarrito();
-    this.nombreCliente = '';
-    this.direccion = '';
-    this.telefono = '';
+    this.cliente = new Cliente();
   }
 }

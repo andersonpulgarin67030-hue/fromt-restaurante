@@ -29,23 +29,23 @@
       </div>
     </div>
 
-    <!-- FORMULARIO DE CONFIRMACIÓN -->
+    <!-- FORMULARIO DE CONFIRMACIÓN CON LA ENTIDAD CLIENTE -->
     <div class="formulario-box">
       <h2>Datos de Envío</h2>
       
       <div class="campo">
         <label>Nombre del Cliente *</label>
-        <input type="text" [(ngModel)]="nombreCliente" placeholder="Ej: Juan Pérez">
+        <input type="text" [(ngModel)]="cliente.nombre" placeholder="Ej: Juan Pérez">
       </div>
 
       <div class="campo">
         <label>Dirección de Entrega</label>
-        <input type="text" [(ngModel)]="direccion" placeholder="Ej: Calle 123 #45-67">
+        <input type="text" [(ngModel)]="cliente.direccion" placeholder="Ej: Calle 123 #45-67">
       </div>
 
       <div class="campo">
         <label>Teléfono de Contacto</label>
-        <input type="tel" [(ngModel)]="telefono" placeholder="Ej: 300 123 4567">
+        <input type="tel" [(ngModel)]="cliente.telefono" placeholder="Ej: 300 123 4567">
       </div>
 
       <div class="campo">

@@ -8,18 +8,32 @@
   <div class="buscadores">
     <div class="buscador">
       <label>Buscar por Bebida</label>
-      <input type="text" [(ngModel)]="busquedaBebida" placeholder="Ej: Margarita, Mojito...">
+      <input 
+        type="text" 
+        [(ngModel)]="busquedaBebida" 
+        (input)="filtrar()" 
+        placeholder="Ej: Margarita, Mojito..."
+      >
     </div>
 
     <div class="buscador">
       <label>Buscar por Ingredientes</label>
-      <input type="text" [(ngModel)]="busquedaIngrediente" placeholder="Ej: Tequila, Lime, Soda...">
+      <input 
+        type="text" 
+        [(ngModel)]="busquedaIngrediente" 
+        (input)="filtrar()" 
+        placeholder="Ej: Tequila, Lime, Soda..."
+      >
     </div>
 
     <!-- FILTRO DE ALCOHOL -->
     <div class="buscador">
       <label>Contenido de Alcohol</label>
-      <select [(ngModel)]="filtroAlcohol" class="select-filtro">
+      <select 
+        [(ngModel)]="filtroAlcohol" 
+        (change)="filtrar()" 
+        class="select-filtro"
+      >
         <option value="todos">Todos</option>
         <option value="alcohol">Con Alcohol</option>
         <option value="sin-alcohol">Sin Alcohol</option>
@@ -29,7 +43,11 @@
     <!-- FILTRO DE CATEGORÍA -->
     <div class="buscador">
       <label>Categoría</label>
-      <select [(ngModel)]="filtroCategoria" class="select-filtro">
+      <select 
+        [(ngModel)]="filtroCategoria" 
+        (change)="filtrar()" 
+        class="select-filtro"
+      >
         <option value="todas">Todas las categorías</option>
         <option value="ordinary">Trago Ordinario (Ordinary Drink)</option>
         <option value="cocktail">Cóctel (Cocktail)</option>
