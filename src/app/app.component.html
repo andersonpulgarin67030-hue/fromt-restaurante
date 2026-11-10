@@ -1,0 +1,73 @@
+
+<div class="top-bar">
+  <span>GASTRONOMÍA FILIPINA & CAFÉ DE ORIGEN</span>
+</div>
+
+
+<nav class="navbar">
+  <div class="logo-area" routerLink="/inicio">
+    <div class="logo-badge">M</div>
+    <span class="logo-text">MANILA</span>
+  </div>
+
+  <div class="nav-links">
+    <a routerLink="/inicio" routerLinkActive="activo" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+    <a routerLink="/comidas" routerLinkActive="activo">Comidas</a>
+    <a routerLink="/bebidas" routerLinkActive="activo">Bebidas</a>
+    <a routerLink="/pedido" routerLinkActive="activo">Pedido</a>
+    <a routerLink="/juego" routerLinkActive="activo">Juego</a>
+  </div>
+</nav>
+
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <span class="logo-badge">M</span>
+        <span class="logo-text">MANILA</span>
+      </div>
+      <p class="brand-desc">
+        Fusionamos la auténtica cocina filipina con el mejor grano de café de origen. Una experiencia gastronómica sobria, moderna y memorable.
+      </p>
+    </div>
+
+    <div class="footer-section">
+      <h4>NAVEGACIÓN</h4>
+      <ul>
+        <li><a routerLink="/inicio">Inicio</a></li>
+        <li><a routerLink="/comidas">Comidas</a></li>
+        <li><a routerLink="/bebidas">Bebidas</a></li>
+        <li><a routerLink="/pedido">Pedido</a></li>
+        <li><a routerLink="/juego">Juego</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>HORARIO DE ATENCIÓN</h4>
+      <p>Lunes a Viernes: 11:00 AM - 10:00 PM</p>
+      <p>Sábados y Domingos: 12:00 PM - 11:00 PM</p>
+      <p class="reserva-note">Reservas online disponibles las 24 horas.</p>
+    </div>
+
+    <div class="footer-section">
+      <h4>REDES SOCIALES</h4>
+      <div class="social-links">
+        <a href="#" target="_blank">Instagram</a>
+        <span class="dot"></span>
+        <a href="#" target="_blank">Facebook</a>
+        <span class="dot"></span>
+        <a href="#" target="_blank">TikTok</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p> 2026 RESTAURANTE MANILA. TODOS LOS DERECHOS RESERVADOS.</p>
+  </div>
+</footer>

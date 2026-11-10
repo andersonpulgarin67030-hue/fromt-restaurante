@@ -1,0 +1,41 @@
+:root {
+  --amarillo: #FFCC00;
+  --negro: #111111;
+  --crema: #FFF9E6;
+  --rojo: #C1272D;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--crema);
+  color: var(--negro);
+  font-family: 'Poppins', Arial, sans-serif;
+}
+
+/* Barra superior */
+nav {
+  background: var(--negro) !important;
+}
+nav a {
+  color: var(--crema) !important;
+}
+nav a.active {
+  color: var(--amarillo) !important;
+  border-bottom: 2px solid var(--amarillo);
+}
+
+/* Botones globales */
+button {
+  background: var(--negro);
+  color: var(--amarillo);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover {
+  background: #222;
+}

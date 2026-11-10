@@ -1,0 +1,71 @@
+<div class="pedido-container">
+  <header class="header-seccion">
+    <h1>Tu Pedido</h1>
+    <p class="sub">Revisa tu resumen y confirma para descargar tu recibo PDF</p>
+  </header>
+
+  <div class="pedido-layout" *ngIf="items.length > 0">
+    
+    <!-- RESUMEN DEL CARRITO -->
+    <div class="resumen-box">
+      <h2>Lista de Productos</h2>
+      <div class="lista-items">
+        <div class="item-card" *ngFor="let item of items; let i = index">
+          <img [src]="item.img" [alt]="item.nombre">
+          <div class="item-info">
+            <h4>{{ item.nombre }}</h4>
+            <span class="tipo-tag" [class.tag-bebida]="item.tipo === 'bebida'">
+              {{ item.tipo.toUpperCase() }}
+            </span>
+          </div>
+          <span class="precio">{{ item.precio }}</span>
+          <button class="btn-eliminar" (click)="eliminarProducto(i)">✕</button>
+        </div>
+      </div>
+
+      <div class="total-box">
+        <span>TOTAL A PAGAR:</span>
+        <span class="monto-total">{{ obtenerTotal() }}</span>
+      </div>
+    </div>
+
+    <!-- FORMULARIO DE CONFIRMACIÓN -->
+    <div class="formulario-box">
+      <h2>Datos de Envío</h2>
+      
+      <div class="campo">
+        <label>Nombre del Cliente *</label>
+        <input type="text" [(ngModel)]="nombreCliente" placeholder="Ej: Juan Pérez">
+      </div>
+
+      <div class="campo">
+        <label>Dirección de Entrega</label>
+        <input type="text" [(ngModel)]="direccion" placeholder="Ej: Calle 123 #45-67">
+      </div>
+
+      <div class="campo">
+        <label>Teléfono de Contacto</label>
+        <input type="tel" [(ngModel)]="telefono" placeholder="Ej: 300 123 4567">
+      </div>
+
+      <div class="campo">
+        <label>Método de Pago</label>
+        <select [(ngModel)]="metodoPago">
+          <option value="efectivo">Efectivo contra entrega</option>
+          <option value="nequi">Nequi / Daviplata</option>
+          <option value="tarjeta">Tarjeta Débito/Crédito</option>
+        </select>
+      </div>
+
+      <button class="btn-confirmar" (click)="confirmarPedido()">
+        Confirmar Pedido & Descargar Recibo PDF
+      </button>
+    </div>
+
+  </div>
+
+  <!-- SI EL CARRITO ESTÁ VACÍO -->
+  <div class="vacio-box" *ngIf="items.length === 0">
+    <p>Aún no has agregado nada a tu pedido.</p>
+  </div>
+</div>

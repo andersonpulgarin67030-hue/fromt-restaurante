@@ -1,0 +1,48 @@
+<div class="comidas-container">
+  <header class="header-seccion">
+    <h1>Nuestras Comidas</h1>
+    <p class="sub">Disfruta de la autenticidad y el sabor de la gastronomía filipina</p>
+  </header>
+
+  <!-- BUSCADORES FUNCIONALES -->
+  <div class="buscadores">
+    <div class="buscador">
+      <label>Buscar por Comida</label>
+      <input type="text" [(ngModel)]="busquedaComida" placeholder="Ej: Adobo, Pancit, Lumpia...">
+    </div>
+    <div class="buscador">
+      <label>Buscar por Ingredientes</label>
+      <input type="text" [(ngModel)]="busquedaIngrediente" placeholder="Ej: pollo, soya, fideos...">
+    </div>
+  </div>
+
+  <!-- ESTADO DE CARGA -->
+  <div *ngIf="cargando" style="text-align: center; padding: 50px 20px; color: #FFCC00; font-weight: bold; font-size: 1.2rem;">
+    <p>Cargando menú desde la API...</p>
+  </div>
+
+  <!-- GRID DE COMIDAS -->
+  <div class="grid" *ngIf="!cargando && comidasFiltradas.length > 0">
+    <div class="card" *ngFor="let comida of comidasFiltradas">
+      <div class="card-img-container">
+        <img [src]="comida.img" [alt]="comida.nombre">
+        <span class="precio-badge">{{ comida.precio }}</span>
+      </div>
+      <div class="info">
+        <h3>{{ comida.nombre }}</h3>
+        <p class="descripcion-plato">{{ comida.desc }}</p>
+        <div class="ingredientes-box">
+          <small><strong>Ingredientes:</strong> {{ comida.ingredientes }}</small>
+        </div>
+        <button class="btn-agregar" (click)="agregarAlPedido(comida)">
+          Agregar al Pedido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENSAJE SI NO HAY RESULTADOS TRAS LA CARGA -->
+  <div *ngIf="!cargando && comidasFiltradas.length === 0" class="vacio">
+    <p>No se encontraron comidas con esos criterios de búsqueda.</p>
+  </div>
+</div>

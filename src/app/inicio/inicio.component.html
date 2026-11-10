@@ -1,0 +1,52 @@
+<div class="hero">
+  <h1>Bienvenido a <span>MANILA</span></h1>
+  <p>Sabores auténticos de Filipinas con toque cafetero</p>
+  <div class="botones">
+    <a routerLink="/comidas" class="btn-principal">Ver Comidas</a>
+    <a routerLink="/bebidas" class="btn-secundario">Ver Bebidas</a>
+  </div>
+</div>
+
+<section class="seccion-carrusel">
+  <h2>Conoce Nuestro Restaurante</h2>
+  <div class="carrusel-container">
+    <div class="carrusel-slide">
+      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800" alt="Ambiente del restaurante">
+      <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=800" alt="Zona de café y bebidas">
+      <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=800" alt="Experiencia Manila">
+    </div>
+  </div>
+</section>
+
+<section class="descripcion">
+  <div class="descripcion-contenido">
+    <h2>Nuestra Historia</h2>
+    <p>
+      En <strong>MANILA</strong> fusionamos la riqueza de la gastronomía filipina tradicional con la cultura cafetera local. Cada platillo está preparado con ingredientes frescos, especias auténticas y el amor por la buena mesa. ¡Ven y vive una experiencia gastronómica única!
+    </p>
+  </div>
+</section>
+
+<section class="especialidades">
+  <h2>Nuestras Especialidades Destacadas</h2>
+
+  <div *ngIf="cargandoEspeciales" style="text-align: center; color: #FFCC00; font-weight: bold; padding: 20px;">
+    Cargando especialidades del día desde la API...
+  </div>
+
+  <div class="cards-especialidades" *ngIf="!cargandoEspeciales">
+    <div class="card" *ngIf="comidaEspecial">
+      <div class="card-tag">Comida Recomendada</div>
+      <img [src]="comidaEspecial.img" [alt]="comidaEspecial.nombre">
+      <h3>{{ comidaEspecial.nombre }}</h3>
+      <p>{{ comidaEspecial.desc }}</p>
+    </div>
+
+    <div class="card" *ngIf="bebidaEspecial">
+      <div class="card-tag tag-bebida">Bebida Insignia</div>
+      <img [src]="bebidaEspecial.img" [alt]="bebidaEspecial.nombre">
+      <h3>{{ bebidaEspecial.nombre }}</h3>
+      <p>{{ bebidaEspecial.desc }}</p>
+    </div>
+  </div>
+</section>

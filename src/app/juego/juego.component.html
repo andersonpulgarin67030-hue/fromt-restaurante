@@ -1,0 +1,46 @@
+<div class="juego-container">
+  <header class="header-seccion">
+    <h1>Juego de Memoria MANILA</h1>
+    <p class="sub">Encuentra las parejas de platillos y bebidas traídos directamente de la API ✨</p>
+  </header>
+
+  <div class="juego-box">
+    
+    <div class="marcador">
+      <div class="caja-puntos">
+        <span class="label">PUNTOS</span>
+        <span class="valor">{{ puntos }}</span>
+      </div>
+      <div class="caja-puntos">
+        <span class="label">RÉCORD</span>
+        <span class="valor">{{ record }}</span>
+      </div>
+    </div>
+
+    <!-- MENSAJE DE CARGA DE API -->
+    <div *ngIf="cargando" class="cargando-box">
+      <p>Cargando sabores desde la API...</p>
+    </div>
+
+    <!-- TABLERO GRID 4X4 (16 CARTAS) -->
+    <div *ngIf="!cargando" class="tablero-grid">
+      <div 
+        *ngFor="let carta of cartas" 
+        class="celda" 
+        [class.volteada]="carta.revelada || carta.emparejada"
+        [class.emparejada]="carta.emparejada"
+        (click)="seleccionarCarta(carta)"
+      >
+        <div class="cara trasera">M</div>
+        <div class="cara frontal">
+          <img [src]="carta.img" [alt]="carta.nombre">
+        </div>
+      </div>
+    </div>
+
+    <div class="controles-panel">
+      <button class="btn-juego" (click)="iniciarJuego()">Reiniciar</button>
+      <button class="btn-juego btn-secundario" (click)="darPista()">Pista</button>
+    </div>
+  </div>
+</div>
