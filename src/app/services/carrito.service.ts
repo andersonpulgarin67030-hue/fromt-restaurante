@@ -4,7 +4,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Producto } from '../entidades/producto';
 import { Cliente } from '../entidades/cliente';
-import { Pedido } from '../entidades/pedido';
+
 
 @Injectable({
   providedIn: 'root'
